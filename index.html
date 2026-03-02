@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Redirector</title>
+    <style>
+        /* Fundo preto total e sem scroll */
+        body {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Impede scroll */
+            width: 100vw;
+            height: 100vh;
+            touch-action: none; /* Impede gestos de zoom no mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        const TARGET_URL = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
+
+        function checkAndRedirect() {
+            const agora = new Date();
+            const hora = agora.getHours();
+            const minuto = agora.getMinutes();
+
+            // Converte tudo para minutos para facilitar a comparação
+            // 4:31h = (4 * 60) + 31 = 271 minutos
+            // 17:59h = (17 * 60) + 59 = 1079 minutos
+            const minutosAtuais = (hora * 60) + minuto;
+            const inicio = 271;
+            const fim = 1079;
+
+            if (minutosAtuais >= inicio && minutosAtuais <= fim) {
+                // Verifica se há conexão com a internet
+                if (navigator.onLine) {
+                    window.location.href = TARGET_URL;
+                } else {
+                    console.log("Aguardando estabilidade da internet...");
+                }
+            }
+        }
+
+        // Bloqueia o zoom via teclado (Ctrl + / Ctrl -)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === '=' || e.key === '-' || e.key === '0')) {
+                e.preventDefault();
+            }
+        });
+
+        // Bloqueia o zoom via roda do mouse
+        document.addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Verifica a cada 5 segundos para garantir a transição automática
+        setInterval(checkAndRedirect, 5000);
+
+        // Executa imediatamente ao carregar
+        checkAndRedirect();
+
+        // Escuta quando a internet volta a ficar online para tentar redirecionar na hora
+        window.addEventListener('online', checkAndRedirect);
+    </script>
+</body>
+</html>
