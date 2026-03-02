@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Black Screen</title>
+    <title>Redirector</title>
     <style>
-        body, html {
-            background-color: black !important;
+        body {
+            background-color: black;
             margin: 0;
             padding: 0;
+            overflow: hidden;
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
-            touch-action: none; /* Bloqueia zoom e gestos no mobile */
-            cursor: none; /* Opcional: esconde o mouse para ficar 100% limpo */
+            touch-action: none;
         }
     </style>
 </head>
@@ -22,34 +21,50 @@
     <script>
         const TARGET_URL = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
 
-        function checkTimeAndNetwork() {
+        function checkAndRedirect() {
             const agora = new Date();
-            const totalMinutos = (agora.getHours() * 60) + agora.getMinutes();
-            
-            // 4:31 = 271 min | 17:59 = 1079 min
-            const estaNoHorario = totalMinutos >= 271 && totalMinutos <= 1079;
+            const hora = agora.getHours();
+            const minuto = agora.getMinutes();
 
-            // Só tenta redirecionar se estiver no horário E com internet
-            if (estaNoHorario && navigator.onLine) {
-                window.location.replace(TARGET_URL); 
-                // Usei .replace para ele não "voltar" para a página preta ao clicar em 'voltar'
+            const minutosAtuais = (hora * 60) + minuto;
+            const inicio = 271;
+            const fim = 1079;
+
+            if (minutosAtuais >= inicio && minutosAtuais <= fim) {
+                if (navigator.onLine) {
+                    window.location.href = TARGET_URL;
+                } else {
+                    console.log("Aguardando estabilidade da internet...");
+                }
             }
         }
 
-        // Verifica a cada 1 segundo (1000ms)
-        setInterval(checkTimeAndNetwork, 1000);
+        // --- Novas funções de controle ---
 
-        // Bloqueios de Zoom (Teclado e Mouse)
-        window.addEventListener('keydown', e => {
-            if (e.ctrlKey && ['+', '-', '0', '=', 's', 'p'].includes(e.key)) e.preventDefault();
+        // Recarrega a página a cada 1 segundo (1000ms)
+        setInterval(() => {
+            location.reload();
+        }, 1000);
+
+        // Bloqueia o zoom via teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === '=' || e.key === '-' || e.key === '0')) {
+                e.preventDefault();
+            }
         });
 
-        window.addEventListener('wheel', e => {
-            if (e.ctrlKey) e.preventDefault();
+        // Bloqueia o zoom via roda do mouse
+        document.addEventListener('wheel', function(e) {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
         }, { passive: false });
 
-        // Execução imediata ao carregar
-        checkTimeAndNetwork();
+        // Verifica o redirecionamento imediatamente ao carregar
+        checkAndRedirect();
+
+        // Tenta redirecionar assim que a internet voltar
+        window.addEventListener('online', checkAndRedirect);
     </script>
 </body>
 </html>
