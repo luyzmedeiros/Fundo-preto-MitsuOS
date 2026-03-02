@@ -1,45 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MitsuOS - Verificando Horário</title>
-    <style>
-        /* Define o fundo preto imediatamente */
-        body {
-            background-color: #000000;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333; /* Texto discreto caso queira colocar um carregando */
-            font-family: sans-serif;
+<script>
+    function verificarHorario() {
+        const agora = new Date();
+        const minutosAtuais = (agora.getHours() * 60) + agora.getMinutes();
+
+        const inicioDia = 271; // 04:31
+        const fimDia = 1079;   // 17:59
+
+        if (minutosAtuais >= inicioDia && minutosAtuais <= fimDia) {
+            window.location.replace("https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/");
+            return;
         }
-    </style>
-</head>
-<body>
-
-    <script>
-        function verificarRedirecionamento() {
-            const agora = new Date();
-            const horas = agora.getHours();
-            const minutos = agora.getMinutes();
-
-            // Converte tudo para minutos totais desde o início do dia para facilitar o cálculo
-            // 4:31h = (4 * 60) + 31 = 271 minutos
-            // 17:59h = (17 * 60) + 59 = 1079 minutos
-            const minutosAtuais = (horas * 60) + minutos;
-            const inicio = (4 * 60) + 31;
-            const fim = (17 * 60) + 59;
-
-            if (minutosAtuais >= inicio && minutosAtuais <= fim) {
-                window.location.href = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
-            }
-        }
-
-        // Executa a função assim que o script é carregado
-        verificarRedirecionamento();
-    </script>
-</body>
-</html>
+    }
+    verificarHorario();
+</script>
