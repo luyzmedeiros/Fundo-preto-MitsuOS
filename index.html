@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Redirector</title>
+    <title>Black Screen</title>
     <style>
-        /* Fundo preto total e sem scroll */
-        body {
-            background-color: black;
+        body, html {
+            background-color: black !important;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Impede scroll */
             width: 100vw;
             height: 100vh;
-            touch-action: none; /* Impede gestos de zoom no mobile */
+            overflow: hidden;
+            touch-action: none; /* Bloqueia zoom e gestos no mobile */
+            cursor: none; /* Opcional: esconde o mouse para ficar 100% limpo */
         }
     </style>
 </head>
@@ -22,50 +22,34 @@
     <script>
         const TARGET_URL = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
 
-        function checkAndRedirect() {
+        function checkTimeAndNetwork() {
             const agora = new Date();
-            const hora = agora.getHours();
-            const minuto = agora.getMinutes();
+            const totalMinutos = (agora.getHours() * 60) + agora.getMinutes();
+            
+            // 4:31 = 271 min | 17:59 = 1079 min
+            const estaNoHorario = totalMinutos >= 271 && totalMinutos <= 1079;
 
-            // Converte tudo para minutos para facilitar a comparação
-            // 4:31h = (4 * 60) + 31 = 271 minutos
-            // 17:59h = (17 * 60) + 59 = 1079 minutos
-            const minutosAtuais = (hora * 60) + minuto;
-            const inicio = 271;
-            const fim = 1079;
-
-            if (minutosAtuais >= inicio && minutosAtuais <= fim) {
-                // Verifica se há conexão com a internet
-                if (navigator.onLine) {
-                    window.location.href = TARGET_URL;
-                } else {
-                    console.log("Aguardando estabilidade da internet...");
-                }
+            // Só tenta redirecionar se estiver no horário E com internet
+            if (estaNoHorario && navigator.onLine) {
+                window.location.replace(TARGET_URL); 
+                // Usei .replace para ele não "voltar" para a página preta ao clicar em 'voltar'
             }
         }
 
-        // Bloqueia o zoom via teclado (Ctrl + / Ctrl -)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === '=' || e.key === '-' || e.key === '0')) {
-                e.preventDefault();
-            }
+        // Verifica a cada 1 segundo (1000ms)
+        setInterval(checkTimeAndNetwork, 1000);
+
+        // Bloqueios de Zoom (Teclado e Mouse)
+        window.addEventListener('keydown', e => {
+            if (e.ctrlKey && ['+', '-', '0', '=', 's', 'p'].includes(e.key)) e.preventDefault();
         });
 
-        // Bloqueia o zoom via roda do mouse
-        document.addEventListener('wheel', function(e) {
-            if (e.ctrlKey) {
-                e.preventDefault();
-            }
+        window.addEventListener('wheel', e => {
+            if (e.ctrlKey) e.preventDefault();
         }, { passive: false });
 
-        // Verifica a cada 5 segundos para garantir a transição automática
-        setInterval(checkAndRedirect, 5000);
-
-        // Executa imediatamente ao carregar
-        checkAndRedirect();
-
-        // Escuta quando a internet volta a ficar online para tentar redirecionar na hora
-        window.addEventListener('online', checkAndRedirect);
+        // Execução imediata ao carregar
+        checkTimeAndNetwork();
     </script>
 </body>
 </html>
