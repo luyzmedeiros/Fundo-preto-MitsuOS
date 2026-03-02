@@ -2,69 +2,44 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Redirector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MitsuOS - Verificando Horário</title>
     <style>
+        /* Define o fundo preto imediatamente */
         body {
-            background-color: black;
+            background-color: #000000;
             margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100vw;
             height: 100vh;
-            touch-action: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333; /* Texto discreto caso queira colocar um carregando */
+            font-family: sans-serif;
         }
     </style>
 </head>
 <body>
 
     <script>
-        const TARGET_URL = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
-
-        function checkAndRedirect() {
+        function verificarRedirecionamento() {
             const agora = new Date();
-            const hora = agora.getHours();
-            const minuto = agora.getMinutes();
+            const horas = agora.getHours();
+            const minutos = agora.getMinutes();
 
-            const minutosAtuais = (hora * 60) + minuto;
-            const inicio = 271;
-            const fim = 1079;
+            // Converte tudo para minutos totais desde o início do dia para facilitar o cálculo
+            // 4:31h = (4 * 60) + 31 = 271 minutos
+            // 17:59h = (17 * 60) + 59 = 1079 minutos
+            const minutosAtuais = (horas * 60) + minutos;
+            const inicio = (4 * 60) + 31;
+            const fim = (17 * 60) + 59;
 
             if (minutosAtuais >= inicio && minutosAtuais <= fim) {
-                if (navigator.onLine) {
-                    window.location.href = TARGET_URL;
-                } else {
-                    console.log("Aguardando estabilidade da internet...");
-                }
+                window.location.href = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
             }
         }
 
-        // --- Novas funções de controle ---
-
-        // Recarrega a página a cada 1 segundo (1000ms)
-        setInterval(() => {
-            location.reload();
-        }, 1000);
-
-        // Bloqueia o zoom via teclado
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && (e.key === '=' || e.key === '-' || e.key === '0')) {
-                e.preventDefault();
-            }
-        });
-
-        // Bloqueia o zoom via roda do mouse
-        document.addEventListener('wheel', function(e) {
-            if (e.ctrlKey) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        // Verifica o redirecionamento imediatamente ao carregar
-        checkAndRedirect();
-
-        // Tenta redirecionar assim que a internet voltar
-        window.addEventListener('online', checkAndRedirect);
+        // Executa a função assim que o script é carregado
+        verificarRedirecionamento();
     </script>
 </body>
 </html>
