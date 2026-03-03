@@ -2,24 +2,42 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecionamento MitsuOS</title>
     <style>
-        body { background-color: white; margin: 0; }
+        body {
+            background-color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+        }
     </style>
 </head>
 <body>
+
     <script>
-        function validar() {
+        function verificarHorario() {
             const agora = new Date();
-            const min = (agora.getHours() * 60) + agora.getMinutes();
+            const horas = agora.getHours();
+            const minutos = agora.getMinutes();
             
-            // 18:00 (1080 min) até 04:30 (270 min)
-            if (min >= 1080 || min <= 270) {
-                window.location.href = "https://luyzmedeiros.github.io/Fundo-preto-MitsuOS/";
-            } else {
-                setTimeout(() => { location.reload(); }, 3000);
+            // Converte tudo para minutos totais desde a meia-noite para facilitar o cálculo
+            // Ex: 4:31 = (4 * 60) + 31 = 271 minutos
+            const tempoAtualEmMinutos = (horas * 60) + minutos;
+
+            const inicioEmMinutos = (4 * 60) + 31;  // 4:31h
+            const fimEmMinutos = (17 * 60) + 59;    // 17:59h
+
+            if (tempoAtualEmMinutos >= inicioEmMinutos && tempoAtualEmMinutos <= fimEmMinutos) {
+                window.location.href = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
             }
         }
-        validar();
+
+        // Executa a função ao carregar a página
+        verificarHorario();
     </script>
 </body>
 </html>
