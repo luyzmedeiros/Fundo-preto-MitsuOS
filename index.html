@@ -1,15 +1,25 @@
-<script>
-    function verificarHorario() {
-        const agora = new Date();
-        const minutosAtuais = (agora.getHours() * 60) + agora.getMinutes();
-
-        const inicioDia = 271; // 04:31
-        const fimDia = 1079;   // 17:59
-
-        if (minutosAtuais >= inicioDia && minutosAtuais <= fimDia) {
-            window.location.replace("https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/");
-            return;
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { background-color: white; margin: 0; }
+    </style>
+</head>
+<body>
+    <script>
+        function validar() {
+            const agora = new Date();
+            const min = (agora.getHours() * 60) + agora.getMinutes();
+            
+            // 18:00 (1080 min) até 04:30 (270 min)
+            if (min >= 1080 || min <= 270) {
+                window.location.href = "https://luyzmedeiros.github.io/Fundo-preto-MitsuOS/";
+            } else {
+                setTimeout(() => { location.reload(); }, 3000);
+            }
         }
-    }
-    verificarHorario();
-</script>
+        validar();
+    </script>
+</body>
+</html>
