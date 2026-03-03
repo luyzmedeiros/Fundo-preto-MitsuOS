@@ -13,10 +13,13 @@
             align-items: center;
             height: 100vh;
             font-family: sans-serif;
+            color: white; /* Adicionado para caso queira escrever algo na tela */
         }
     </style>
 </head>
 <body>
+
+    <p>Monitorando horário para MitsuOS (Modo Escuro)...</p>
 
     <script>
         function verificarHorario() {
@@ -24,20 +27,28 @@
             const horas = agora.getHours();
             const minutos = agora.getMinutes();
             
-            // Converte tudo para minutos totais desde a meia-noite para facilitar o cálculo
-            // Ex: 4:31 = (4 * 60) + 31 = 271 minutos
+            // Converte tudo para minutos totais desde a meia-noite
             const tempoAtualEmMinutos = (horas * 60) + minutos;
 
-            const inicioEmMinutos = (4 * 60) + 31;  // 4:31h
+            const inicioEmMinutos = (4 * 60) + 31;  // 04:31h
             const fimEmMinutos = (17 * 60) + 59;    // 17:59h
 
+            // Se o horário atual estiver entre 04:31 e 17:59, redireciona para o fundo branco
             if (tempoAtualEmMinutos >= inicioEmMinutos && tempoAtualEmMinutos <= fimEmMinutos) {
+                console.log("Horário de fundo branco atingido! Redirecionando...");
                 window.location.href = "https://luyzmedeiros.github.io/Fundo-branco-MitsuOS/";
+            } else {
+                // Log opcional para ver o script rodando no console (F12)
+                console.log("Permanecendo em modo escuro. Hora atual: " + horas + ":" + (minutos < 10 ? '0'+minutos : minutos));
             }
         }
 
-        // Executa a função ao carregar a página
+        // 1. Executa assim que a página abre
         verificarHorario();
+
+        // 2. Verifica a cada 1000 milissegundos (1 segundo) 
+        // para detectar a mudança de horário do sistema sem precisar de refresh
+        setInterval(verificarHorario, 1000);
     </script>
 </body>
 </html>
